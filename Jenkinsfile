@@ -9,5 +9,10 @@ sh ./gradlew build'''
         sleep 2
       }
     }
+    stage('stage-2') {
+      steps {
+        echo 'In Stage 2 of pipeline'
+      }
+    }
   }
 }
