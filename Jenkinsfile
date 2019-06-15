@@ -1,18 +1,23 @@
 pipeline {
-  agent any
-  stages {
-    stage('common-build-pipeline') {
-      steps {
-        sh '''echo "Starting Step 1"
-sh ./gradlew clean
-sh ./gradlew build'''
-        sleep 2
-      }
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh '''echo "Starting Step 1"
+                      ./gradlew clean build'''
+            }
+        }
+        stage('Test') {
+            steps {
+                sh './gradlew check'
+            }
+        }
     }
-    stage('stage-2') {
-      steps {
-        echo 'In Stage 2 of pipeline'
-      }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'build/libs/**/*.war', fingerprint: true
+            junit 'build/test-results/**/*.xml'
+        }
     }
-  }
 }
